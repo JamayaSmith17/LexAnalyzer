@@ -1,0 +1,14 @@
+/*
+* This simple program prints “Hello World!” n times.
+*
+*/
+public void main(String[ ] args) {
+	string code = “Hello World!”;
+	string phrase= “What’s up?; // intentional error
+	3number n = 10;  // intentional error
+
+	for ( number i = 0; i < n; i++ ) {
+		print(code);
+	}
+
+}
