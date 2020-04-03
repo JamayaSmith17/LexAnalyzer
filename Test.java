@@ -36,8 +36,13 @@ public class Test {
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(filename));
 			String tokenLine = "";
+			boolean firstTime = true;
 
 			while (tokenLine != null) {
+				if (commentStarted == false && firstTime == false){
+					Lex.CrystalToken token = crystalLex.getToken("\n", commentStarted);
+					printOutput(token);
+				}
 				tokenLine = reader.readLine();
 				System.out.println(tokenLine); //debugging
 
@@ -63,6 +68,7 @@ public class Test {
 						}
 					}
 				}
+				firstTime = false;
 			}
 
 			if (commentStarted){
