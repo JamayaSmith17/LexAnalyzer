@@ -32,7 +32,7 @@ public class Lex {
     }
 
     // returns the next token in the input as an object with a token type and a token value
-    public CrystalToken getToken(String token) {
+    public CrystalToken getToken(String token, boolean inComment) {
 		// StringTokenizer inputTokens = new StringTokenizer(token);
 		//
 		// while (inputTokens.hasMoreTokens()) {
@@ -42,7 +42,7 @@ public class Lex {
 		String determinedValue = token;
 		String determinedTokenType = tokenType(token);
 
-		if (determinedTokenType.equals("error")) { // default case - lexeme does not match any defined types
+		if (determinedTokenType.equals("error") && inComment == false) { // default case - lexeme does not match any defined types
       System.out.println("Lexical error identified."); 
 			return null;
 		}
@@ -58,6 +58,15 @@ public class Lex {
     // determines the type of token
     public String tokenType(String token) {
       String result = "";
+
+      // Checking if token is a keyword
+      String[] keywords = { "number", "string", "vector" ,"print" , "strcat",
+                "true", "false" , "function" , "return" , "void",
+                "main" , "if" , "else" , "while" , "null" };
+
+      for (String k : keywords){
+        if (token.equals(k)){return "<Keyword>";}
+      }
 
       //Bushra doing identifiers, constant numbers and constant strings
 
@@ -124,7 +133,7 @@ public class Lex {
       
       //Use .split to split token
       Character firstC = token.charAt(0);
-      Character lastC = token.charAt(-1);
+      Character lastC = token.charAt(token.length()-1);
       if (firstC.equals('\"') && lastC.equals('\"')){
           int tokenEnd = token.length() - 1;
           String miniToken = token.substring(1,tokenEnd);
@@ -150,14 +159,6 @@ public class Lex {
 
       //}
 
-      // Checking if token is a keyword
-      String[] keywords = { "number", "string", "vector" ,"print" , "strcat",
-                "true", "false" , "function" , "return" , "void",
-                "main" , "if" , "else" , "while" , "null" };
-
-      for (String k : keywords){
-        if (token.equals(k)){return "<Keyword>";}
-      }
       // Checking if token is a punctuation character
       String[] punctuation = { ";" , "[" , "]" , "{" , "}" , "(" , ")" , "," };
 
@@ -192,7 +193,7 @@ public class Lex {
         } else {
           result = "error";
         }
-        
+
         return result;
       }
 	}

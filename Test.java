@@ -24,7 +24,7 @@ public class Test {
 		String tokenTy = output.getValue();
 
 		// print output from getToken()
-		System.out.println("Token type: " + tokenTy + "Token value: " + tokenVal );
+		System.out.println("Token type: " + tokenTy + " Token value: " + tokenVal );
     }
 
     // reads the input file from the command line, line by line, and passes them to Lex()
@@ -35,7 +35,7 @@ public class Test {
 
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(filename));
-			String tokenLine = reader.readLine();
+			String tokenLine = "";
 
 			while (tokenLine != null) {
 				tokenLine = reader.readLine();
@@ -46,26 +46,27 @@ public class Test {
 				while (newTokenLine.hasMoreTokens()) {
 					// passes line
 					if (commentStarted == false){
-						Lex.CrystalToken token = crystalLex.getToken(newTokenLine.nextToken());
+						Lex.CrystalToken token = crystalLex.getToken(newTokenLine.nextToken(), commentStarted);
 						printOutput(token);
 						
 						if (token.getTokenType().equals("<Comment>")){
-						commentStarted = true;
+							commentStarted = true;
 						} else if (token.getTokenType().equals("<>")) {
-						System.out.println("comment found with no start");
+							System.out.println("comment found with no start");
 						}
 					} else {
 						// comment started, anything that's not an end is not a code bit.
-						Lex.CrystalToken token = crystalLex.getToken(newTokenLine.nextToken());
+						Lex.CrystalToken token = crystalLex.getToken(newTokenLine.nextToken(), commentStarted);
+						
 						if (token.getTokenType().equals("<>")){
-						commentStarted = false;
+							commentStarted = false;
 						}
 					}
-
-					if (commentStarted){
-						System.out.println("Unfinished comment found.");
-					}
 				}
+			}
+
+			if (commentStarted){
+				System.out.println("Unfinished comment found.");
 			}
 		} catch (Exception e) {
 			System.out.println(e);
