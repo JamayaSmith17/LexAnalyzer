@@ -88,7 +88,7 @@ public class Test {
 				System.out.println("Unfinished constant string found.");
 			}
 		} catch (Exception e) {
-			System.out.println(e);
+			// System.out.println(e);
 		}
 
     }
