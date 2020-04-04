@@ -43,7 +43,7 @@ public class Lex {
 		String determinedTokenType = tokenType(token);
 
 		if (determinedTokenType.equals("error") && inComment == false) { // default case - lexeme does not match any defined types
-      System.out.println("Lexical error identified."); 
+      System.out.println("Lexical error identified.");
 			return null;
 		}
 
@@ -67,6 +67,7 @@ public class Lex {
       for (String k : keywords){
         if (token.equals(k)){return "<Keyword>";}
       }
+
 
       //Bushra doing identifiers, constant numbers and constant strings
 
@@ -113,13 +114,10 @@ public class Lex {
 
       /* while (onlyASCII == true && loopOver == true){
             x = char at current index
-
         boolean isASCII = null;
             isASCII = getASCII(x);
             if (isASCII == false){
             onlyASCII = false;
-
-
             if index < arr length, index++
             else loopOver = false
       // } */
@@ -130,7 +128,7 @@ public class Lex {
             "9", ":", ";", "<", "=", ">", "?", "@", "A-Z", "a-z",
             "[", "\\", "]", "^", "_", "`", "{", "}", "|", "~"  };
 
-      
+
       //Use .split to split token
       Character firstC = token.charAt(0);
       Character lastC = token.charAt(token.length()-1);
@@ -185,17 +183,16 @@ public class Lex {
       }
       else {
         Pattern pattern = Pattern.compile("[ \t\n\f\r]" );
-        Matcher matcher = pattern.matcher(token);
-        boolean found = matcher.find();
+        Matcher matcher = pattern.matcher(token.toString());
+      //  boolean found = matcher.matches();
 
-        if ( found = matcher.find() == true ) {
-          return "<Whitespace>";
-        } else {
-          result = "error";
+        if ( matcher.matches() == true ) {
+          String keep = "<Whitespace>";
+          } else {
+            result = "error";
         }
-
-        return result;
       }
+      return result;
 	}
 
 	public boolean getASCII(String s){
@@ -207,10 +204,10 @@ public class Lex {
 				"j", "k", "l", "m", "n", "o", "p", "q", "r",
 				"s", "t", "u", "v", "w", "x", "y", "z", "[", "\\", "]",
 				"^", "_", "`", "{", "}", "|", "~" };
-		for(String a: ASCII){ 
+		for(String a: ASCII){
 			if ( s.equals(a) ){
 				return true;
-			}	
+			}
 		}
 		return false;
 	}
@@ -227,7 +224,7 @@ public class Lex {
 
 	    public String getValue(){ return value; }
 
-	    public String getTokenType(){ return tokenType; }		
+	    public String getTokenType(){ return tokenType; }
 	}
 
 } // End of class Lex()
