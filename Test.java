@@ -36,36 +36,23 @@ public class Test {
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(filename));
 			String tokenLine = "";
-			boolean firstTime = true;
-			boolean firstTimePerLine = true;
-
+			
 			while (tokenLine != null) {
-				if (commentStarted == false && firstTime == false){
-					Lex.CrystalToken token = crystalLex.getToken("\n", commentStarted);
-					printOutput(token);
-				}
 				tokenLine = reader.readLine();
 			//	System.out.println(tokenLine); //debugging
 
 				StringTokenizer newTokenLine = new StringTokenizer(tokenLine);
-				firstTimePerLine = true;
-
 				while (newTokenLine.hasMoreTokens()) {
 					// passes line
 					if (commentStarted == false){
-						if(firstTimePerLine == false){
-							Lex.CrystalToken token = crystalLex.getToken(" ", commentStarted);
-							printOutput(token);
-						}
-
+						
 						Lex.CrystalToken token = crystalLex.getToken(newTokenLine.nextToken(), commentStarted);
-						printOutput(token);
 
 						if (token.getTokenType().equals("<Comment>")){
 							commentStarted = true;
 						} else if (token.getTokenType().equals("<>")) {
 							System.out.println("comment found with no start");
-						}
+						} else { printOutput(token); }
 					} else {
 						// comment started, anything that's not an end is not a code bit.
 						Lex.CrystalToken token = crystalLex.getToken(newTokenLine.nextToken(), commentStarted);
@@ -74,10 +61,7 @@ public class Test {
 							commentStarted = false;
 						}
 					}
-
-					firstTimePerLine = false;
 				}
-				firstTime = false;
 			}
 
 			if (commentStarted){
