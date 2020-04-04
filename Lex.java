@@ -32,7 +32,7 @@ public class Lex {
     }
 
     // returns the next token in the input as an object with a token type and a token value
-    public CrystalToken getToken(String token, boolean inComment) {
+    public CrystalToken getToken(String token, boolean inComment, boolean inStr) {
 		// StringTokenizer inputTokens = new StringTokenizer(token);
 		//
 		// while (inputTokens.hasMoreTokens()) {
@@ -40,7 +40,7 @@ public class Lex {
 		//   String token2 = inputTokens.nextToken();
 
 		String determinedValue = token;
-		String determinedTokenType = tokenType(token);
+		String determinedTokenType = tokenType(token, inStr);
 
 		if (determinedTokenType.equals("error") && inComment == false) { // default case - lexeme does not match any defined types
       System.out.println("Lexical error identified.");
@@ -56,8 +56,39 @@ public class Lex {
     }
 
     // determines the type of token
-    public String tokenType(String token) {
+    public String tokenType(String token, boolean inStr) {
       String result = "";
+
+      if(inStr){
+        int tokenEnd = token.length() - 1;
+        String miniToken;
+
+        if (token.endsWith("\"")){
+          miniToken = token.substring(0,token.length()-1);
+        } else {miniToken = token;}
+        
+        String[] stringArr = miniToken.split("");
+        int indS = 0;
+        boolean onlyASCII = true;
+        boolean loopOver = false;
+        boolean isASCII;
+        String x = null;
+
+        while (onlyASCII == true && loopOver == false){
+          x = stringArr[indS];
+          // System.out.println(x);
+          isASCII = getASCII(x);
+          if (isASCII == false){
+            onlyASCII = false;
+          }
+          if (indS < stringArr.length-1) {indS++;}
+          else { loopOver = true;}
+            
+        }
+        if (onlyASCII){ return "<Constant String>";} else {
+          return "error";
+        }
+      }
 
       // Checking if token is a keyword
       String[] keywords = { "number", "string", "vector" ,"print" , "strcat",
@@ -67,7 +98,6 @@ public class Lex {
       for (String k : keywords){
         if (token.equals(k)){return "<Keyword>";}
       }
-
 
       //Bushra doing identifiers, constant numbers and constant strings
 
@@ -122,13 +152,6 @@ public class Lex {
             else loopOver = false
       // } */
 
-      //constant strings
-      String[] ASCII = {" ", "!", "#", "$", "%", "&", "'", "(", ")", "*", "+",
-            ",", "-", ".", "/", "0", "1", "2", "3", "4", "5", "6", "7", "8",
-            "9", ":", ";", "<", "=", ">", "?", "@", "A-Z", "a-z",
-            "[", "\\", "]", "^", "_", "`", "{", "}", "|", "~"  };
-
-
       //Use .split to split token
       Character firstC = token.charAt(0);
       Character lastC = token.charAt(token.length()-1);
@@ -155,7 +178,31 @@ public class Lex {
 
       }
 
-      //}
+      if(firstC.equals('\"')){
+        int tokenEnd = token.length() - 1;
+        String miniToken = token.substring(1);
+        String[] stringArr = miniToken.split("");
+        //boolean isConsString = true;
+        int indS = 0;
+        boolean onlyASCII = true;
+        boolean loopOver = false;
+        boolean isASCII;
+        String x = null;
+
+        while (onlyASCII == true && loopOver == false){
+          x = stringArr[indS];
+          // System.out.println(x);
+          isASCII = getASCII(x);
+          if (isASCII == false){
+              onlyASCII = false; }
+          if (indS < stringArr.length-1) {indS++;}
+          else { loopOver = true;}
+        }
+          if (onlyASCII==true){
+              
+            return "<Constant String>";
+          }  
+      }
 
       // Checking if token is a punctuation character
       String[] punctuation = { ";" , "[" , "]" , "{" , "}" , "(" , ")" , "," };
@@ -172,6 +219,11 @@ public class Lex {
         if (token.equals(o)){return "<Operator>";}
       }
 
+      // new separate comment instance not covered sequentially
+      if (token.startsWith("/*") && token.endsWith("*/")){
+        return "<Singleton Comment>";
+      }
+
       if (token.startsWith("/*")){
           commentStarted = true;
           return "<Comment>";
@@ -182,15 +234,7 @@ public class Lex {
           return "<>";
       }
       else {
-        Pattern pattern = Pattern.compile("[ \t\n\f\r]" );
-        Matcher matcher = pattern.matcher(token.toString());
-      //  boolean found = matcher.matches();
-
-        if ( matcher.matches() == true ) {
-          String keep = "<Whitespace>";
-          } else {
-            result = "error";
-        }
+        result = "error";
       }
       return result;
 	}

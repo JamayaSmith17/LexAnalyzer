@@ -31,6 +31,8 @@ public class Test {
     public static void main(String[] args) {
 		Lex crystalLex = new Lex();
 		boolean commentStarted = false;
+		boolean stringStarted = false;
+		String literalString="";
 		String filename = args[0];
 
 		try {
@@ -46,16 +48,32 @@ public class Test {
 					// passes line
 					if (commentStarted == false){
 						
-						Lex.CrystalToken token = crystalLex.getToken(newTokenLine.nextToken(), commentStarted);
+						String lexeme = newTokenLine.nextToken();
+						// System.out.println(lexeme);
+						Lex.CrystalToken token = crystalLex.getToken(lexeme, commentStarted, stringStarted);
 
-						if (token.getTokenType().equals("<Comment>")){
+						if (stringStarted){
+							literalString = literalString + " "+token.getValue();
+							if(token.getValue().endsWith("\"")){
+								stringStarted = false;
+								System.out.println("Token type: " + literalString + " Token value: <Constant String>");	
+							}
+
+						} else if (token.getTokenType().equals("<Constant String>") && token.getValue().endsWith("\"")
+						     == false){
+								stringStarted = true;
+								literalString = token.getValue();
+
+						} else if (token.getTokenType().equals("<Comment>")){
 							commentStarted = true;
 						} else if (token.getTokenType().equals("<>")) {
 							System.out.println("comment found with no start");
+						} else if (token.getTokenType().equals("<Singleton Comment>")){ 
+							// just. do nothing. this is   n o t h i n g .
 						} else { printOutput(token); }
 					} else {
 						// comment started, anything that's not an end is not a code bit.
-						Lex.CrystalToken token = crystalLex.getToken(newTokenLine.nextToken(), commentStarted);
+						Lex.CrystalToken token = crystalLex.getToken(newTokenLine.nextToken(), commentStarted, stringStarted);
 
 						if (token.getTokenType().equals("<>")){
 							commentStarted = false;
@@ -66,6 +84,8 @@ public class Test {
 
 			if (commentStarted){
 				System.out.println("Unfinished comment found.");
+			} else if (stringStarted){
+				System.out.println("Unfinished constant string found.");
 			}
 		} catch (Exception e) {
 			System.out.println(e);
