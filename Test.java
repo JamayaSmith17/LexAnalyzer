@@ -20,8 +20,8 @@ import java.util.StringTokenizer;
 public class Test {
 
     public static void printOutput(Lex.CrystalToken output) {
-	String tokenVal = output.getValue();
-	String tokenTy = output.getTokenType();
+		String tokenVal = output.getValue();
+		String tokenTy = output.getTokenType();
 
 		// print output from getToken()
 		System.out.println("Token type: " + tokenTy + " Token value: " + tokenVal );
