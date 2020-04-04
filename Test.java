@@ -45,7 +45,7 @@ public class Test {
 					printOutput(token);
 				}
 				tokenLine = reader.readLine();
-				System.out.println(tokenLine); //debugging
+			//	System.out.println(tokenLine); //debugging
 
 				StringTokenizer newTokenLine = new StringTokenizer(tokenLine);
 				firstTimePerLine = true;
@@ -60,7 +60,7 @@ public class Test {
 
 						Lex.CrystalToken token = crystalLex.getToken(newTokenLine.nextToken(), commentStarted);
 						printOutput(token);
-						
+
 						if (token.getTokenType().equals("<Comment>")){
 							commentStarted = true;
 						} else if (token.getTokenType().equals("<>")) {
@@ -69,7 +69,7 @@ public class Test {
 					} else {
 						// comment started, anything that's not an end is not a code bit.
 						Lex.CrystalToken token = crystalLex.getToken(newTokenLine.nextToken(), commentStarted);
-						
+
 						if (token.getTokenType().equals("<>")){
 							commentStarted = false;
 						}
@@ -86,6 +86,6 @@ public class Test {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-		
+
     }
 } // End of Test()
