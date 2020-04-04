@@ -125,7 +125,7 @@ public class Lex {
           boolean isNum = true;
           if (correctDot==true){
         for (int i=0;i<subToken.length(); i++){
-            System.out.println(subToken.charAt(i));            
+            // System.out.println(subToken.charAt(i));            
             if (Character.isDigit(subToken.charAt(i)) == false){
               isNum = false;
             }
