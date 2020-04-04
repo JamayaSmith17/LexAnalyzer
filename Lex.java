@@ -1,4 +1,5 @@
 import java.lang.Character;
+import java.lang.Float;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
@@ -109,7 +110,7 @@ public class Lex {
           if (Character.isJavaIdentifierPart(token.charAt(i)) == false){
             isId = false;
           }
-          if (isId){return "<Identifier>";}
+            if (isId){return "<Identifier>";}
           }
       }
 
@@ -117,18 +118,25 @@ public class Lex {
       Character firstNum = token.charAt(0);
       String subToken = token.substring(1);
       // separately check the first character of the token
-      if ( ( Character.isDigit(firstNum) ) || ( firstNum.equals("-")) ) {
+      if ( ( Character.isDigit(firstNum) ) || ( firstNum.equals('-')) ) {
           boolean negDigFirst = true;
           boolean correctDot = subToken.indexOf(".")==subToken.lastIndexOf(".");
-          subToken.replace(".","");
+          subToken = subToken.replace(".","");
           boolean isNum = true;
           if (correctDot==true){
         for (int i=0;i<subToken.length(); i++){
+            System.out.println(subToken.charAt(i));            
             if (Character.isDigit(subToken.charAt(i)) == false){
-          isNum = false;
+              isNum = false;
             }
-            if (isNum){return "<Constant Number>";}
         }
+
+        float numValue = Float.parseFloat(token);
+        if (numValue < -32768 || numValue > 32767){
+          isNum = false;
+        }
+
+        if (isNum){return "<Constant Number>";}
 
           }
       }
@@ -171,7 +179,7 @@ public class Lex {
         isASCII = getASCII(x);
         if (isASCII == false){
             onlyASCII = false; }
-        if (indS < stringArr.length) {indS++;}
+        if (indS < stringArr.length-1) {indS++;}
         else { loopOver = true;}
           }
           if (onlyASCII){ return "<Constant String>";}

@@ -2,4 +2,4 @@
 
 javac Lex.java
 javac Test.java
-java Test inputfile.txt
+java Test othertests.txt
